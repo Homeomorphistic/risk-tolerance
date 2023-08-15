@@ -22,7 +22,7 @@ _Investment grade_ are securities above BBB (S&P), Baa (Moody).
 Credit ratings affect the cost of borrowing. Bonds with higher quality will carry the lowest yields, bonds with lower quality yield more.
 The yield provides scale of creditworthiness: higher yields indicate higher risk.
 
-_Credit quality spread_ is differences in yield between bonds of the same maturity, but with different ratings.
+_Credit quality spread_ is difference in yield between bonds of the same maturity, but with different ratings.
 Credit quality spread wides as riskiness is perceived to increas, either as maturities become longer or credit quality lower.
 *Many proffesional traders base trading strategies on the extent to which the spreads vary from what is considered "normal".*
 
