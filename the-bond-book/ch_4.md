@@ -1,7 +1,7 @@
 # Cashflows
 There are 3 sources of income from bond: selling (or redeeming) a bond, simple interest derived from coupons and *interest on reinvested coupons*.
 
-For compounding require 2 ingreidients needed: time and reinvestment!
+Compounding requires 2 ingreidients: time and reinvestment!
 
 # The many yields
 
