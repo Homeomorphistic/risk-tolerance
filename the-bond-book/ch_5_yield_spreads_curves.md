@@ -19,4 +19,4 @@ Yield curve can be used by individual investor to find buy points within maturit
 by taking more risk (longer maturity). 
 
 # Shopping guidelines
-Start with deciding on maturity, credit quality and yield (in this order). You should start with determining the risk you want to take.
+Start with deciding on maturity, credit quality and yield (in this order). You should start with determining the risk you are willing to take.
