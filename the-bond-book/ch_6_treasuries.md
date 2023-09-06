@@ -46,7 +46,7 @@ I didn't understand it clearly. It is advised to use tax advantaged accounts.
 
 # TIPS vs coupons
 It's hard to compare them, because you don't know the inflation rate, for which face value of TIPS will
-be increased. It is impossible to decide whos yield will be higher, it's only possible to say that TIPS
+be increased. It is impossible to decide whose yield will be higher, it's only possible to say that TIPS
 will parallel the inflation rate.
 
 # TreasuryDirect
