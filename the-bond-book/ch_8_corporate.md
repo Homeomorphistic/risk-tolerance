@@ -2,7 +2,7 @@
 There are five groups:
 
 * Utilities, group consisting of both electric and telephone companies. They are
-highly regulated (it depends on country) so are considered the safest of all 
+highly regulated (it depends on country) so are (were) considered the safest of all 
 corporate  bonds.
 * Transportation, contains airlines and railroads.
 * Industrials, largest and most diverse group, with industrial sector.
@@ -13,7 +13,7 @@ They are also classified by the security used as a collateral, for example it co
 morgages, financial obligations or railway rolling stock. Corporates without collateral
 are called debentures or notes.
 
-Corporates yield is more attractive from any other, because credit rating is lower.
+Corporate's yield is more attractive from any other, because credit rating is lower.
 Also they are subject to more risk factors. At the time of writing the book, half 
 of the corporates were junk status. There are various risks with calls.
 
@@ -45,6 +45,6 @@ maturity, so the interest risk is relatively modest.
 # When to buy
 For investment grade bonds, you want to buy corporates when the yields are higher than those
 of treasuries by a significant amount, let's say 150 bp for maturities in 5-10 year range.
-As always you have to decide whether the spread is wide enought to compenstate you for 
+As always you have to decide whether the spread is wide enough to compenstate you for 
 additional risk you are taking on. Some professionals feel that for individual inverstors
 high-grade corporates do not have a spread that is wide enough to compensate for uncertainties.
