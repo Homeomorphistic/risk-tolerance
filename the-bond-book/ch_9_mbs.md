@@ -44,19 +44,19 @@ to get more prepayments and you get lots of principal back when rates are lower.
 reinvest at lower rates. This is way GNMAs may decline in value and your return will be lower.
 
 Suppose interest rates rise. Prepayments are slowing down, so longer life of GNMA. So you are holding
-GNMA longer when rates are higher and the price is likeyl to decline more than intermediate bonds.
+GNMA longer when rates are higher and the price is likely to decline more than intermediate bonds.
 
 Conclusions: volatility is slighltly less because GNMAs are treated as intermediate instruments.
 **They yield more than treasuries on current yield basis, but when total return is considered, 
 there are time periods when they may not perform as well as treasuries.**
 
 # Prepayment assumptions
-At first prepayment patters is based on the data compiled by the Federal Housing Administration
+At first prepayment patterns were based on the data compiled by the Federal Housing Administration
 and was used to compare pools of GNMAs. Then came CPR model (constant prepayment rate) with
 constant rates of mortgages prepays. At the time of writing book the standard is Public Securities
 Association (PSA) model. It's a combination of previous models.
 
-Average life is a technical term that approximates time , when half of the principal will be paid.
+Average life is a technical term that approximates time, when half of the principal will be paid.
 It is used to compare the cash flow from GNMA to the YTM of a treasury whos maturity is the same
 as average life.
 
@@ -69,7 +69,7 @@ to speed up, since coupon rates are lower than current. They are more sensitive 
 rate than par or premium and so more volatile.
 
 Premiium GNMAs have higher coupons. If interest rates rise, the high coupon acts as brake
-and cushions agains declines in price. Tis is why premiums are hedge against rising interest.
+and cushions agains declines in price. This is why premiums are hedge against rising interest.
 In case of steep decline of interest rates prepayments speed up and you have to invest at
 lower interest rate.
 
@@ -113,12 +113,12 @@ and Freddie became private corporations. They issue they own debt instruments to
 they later repackage into MBS.
 
 GNMA remains a government agency, so it has guaranteed government help. Both Fannie and Freddie are
-government-sponsored enterprises (GSEs), which are publibcly traded at stock exchanges. They have the
-ability to borrow directly from government. Until the crisis it meant implicit AAA rating on the debt
+government-sponsored enterprises (GSEs), which are publicly traded at stock exchanges. They have the
+ability to borrow directly from government. Until the crisis, it meant implicit AAA rating on the debt
 of those agencies.
 
 # Private-label mortgages
-First thing to change was CMOs that did not have agency backing, knows as "private-label". Initially
+First thing to change was CMOs that did not have agency backing, known as "private-label". Initially
 they were based on "jumbo mortgages", very large martgages typically taken out by affluent homebuyers.
 
 Next were CMOs with sub-prime mortgages. It's estimated that by 2006, approximately 50% of MBS were based
