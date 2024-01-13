@@ -23,25 +23,39 @@ dates <- sapply(dates, function(x) paste0(x, ".01"))
 sp500_raw["Date"] <- as.Date(dates, format = "%Y.%m.%d") - 1 # -1 to match with other data
 
 # Remove first rows to match dates between sets.
-start_date_ind <- which(sp500_raw["Date"] == "1946-12-31")
+start_date_ind <- which(sp500_raw["Date"] == "1947-12-31")
 sp500_raw <- sp500_raw[start_date_ind:nrow(sp500_raw),]
+us_gov_bonds_raw <- us_gov_bonds_raw[13:nrow(us_gov_bonds_raw),]
 
 #####################################
 ######### CALCULATE RETURNS #########
 sp500_raw["return"] <- 0
+sp500_raw["inflation"] <- sp500_raw["CPI"]
 n <- nrow(sp500_raw)
+
 sp500_shift_1 <- sp500_raw[2:n,]
 sp500_raw[2:n, "return"] <- (sp500_shift_1[, "Price"] + sp500_shift_1["Dividend"]/12 ) / sp500_raw[1:(n-1), "Price"] - 1
+sp500_raw[2:n, "inflation"] <- sp500_shift_1[, "inflation"] / sp500_raw[1:(n-1), "inflation"] - 1
 
 #####################################
 ######### JOIN DATAFRAMES ###########
 us_returns <- data.frame(sp500_raw["Date"], us_gov_bonds_raw["Return.M"], sp500_raw["return"],
-                         sp500_raw["CPI"])
-names(us_returns) <- c("date", "us_gov_return", "sp500_return", "cpi")
+                         sp500_raw["inflation"], row.names = NULL)
+names(us_returns) <- c("date", "us_gov_return", "sp500_return", "inflation")
 us_returns[1, "us_gov_return"] <- 0
+us_returns[1, "inflation"] <- 0
 
-summary(us_returns["sp500_return"])
-hist(unlist(us_returns["sp500_return"]), breaks = seq(-0.25, 0.2,0.01))
+write.csv(us_returns, file = "us_returns.csv", row.names = FALSE)
 
-summary(us_returns["us_gov_return"])
-hist(unlist(us_returns["us_gov_return"]), breaks = seq(-0.1, 0.15,0.01))
+# Histograms.
+hist(us_returns$sp500_return, breaks = seq(-0.25, 0.2,0.005))
+abline(v=0, col="red")
+
+hist(us_returns$us_gov_return, breaks = seq(-0.1, 0.15,0.005))
+abline(v=0, col="red")
+
+# CAGR
+n_years <- nrow(us_returns)/12
+prod(1+us_returns$sp500_return)^(1/n_years) - 1
+prod(1+us_returns$us_gov_return)^(1/n_years) - 1
+prod(1+us_returns$inflation)^(1/n_years) - 1
