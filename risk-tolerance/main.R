@@ -39,34 +39,34 @@ sp500_raw[2:n, "inflation"] <- sp500_shift_1[, "inflation"] / sp500_raw[1:(n-1),
 
 #####################################
 ######### JOIN DATAFRAMES ###########
-us_monthly_returns <- data.frame(sp500_raw["Date"], us_gov_bonds_raw["Return.M"], sp500_raw["return"],
-                                 sp500_raw["inflation"], row.names = NULL)
-names(us_monthly_returns) <- c("date", "us_gov_return", "sp500_return", "inflation")
-us_monthly_returns <- us_monthly_returns[-1,]
+us_mo_returns <- data.frame(sp500_raw["Date"], us_gov_bonds_raw["Return.M"], sp500_raw["return"],
+                            sp500_raw["inflation"], row.names = NULL)
+names(us_mo_returns) <- c("date", "us_gov_return", "sp500_return", "inflation")
+us_mo_returns <- us_mo_returns[-1,]
 
-write.csv(us_monthly_returns, file = "us_monthly_returns.csv", row.names = FALSE)
+write.csv(us_mo_returns, file = "us_monthly_returns.csv", row.names = FALSE)
 
 # Histograms.
-hist(us_monthly_returns$sp500_return, breaks = seq(-0.25, 0.2, 0.005))
+hist(us_mo_returns$sp500_return, breaks = seq(-0.25, 0.2, 0.005))
 abline(v=0, col="red")
 
-hist(us_monthly_returns$us_gov_return, breaks = seq(-0.1, 0.15, 0.005))
+hist(us_mo_returns$us_gov_return, breaks = seq(-0.1, 0.15, 0.005))
 abline(v=0, col="red")
 
 # CAGR
-n_years <- nrow(us_monthly_returns)/12
-prod(1+us_monthly_returns$sp500_return)^(1/n_years) - 1
-prod(1+us_monthly_returns$us_gov_return)^(1/n_years) - 1
-prod(1+us_monthly_returns$inflation)^(1/n_years) - 1
+n_years <- nrow(us_mo_returns)/12
+prod(1+us_mo_returns$sp500_return)^(1/n_years) - 1
+prod(1+us_mo_returns$us_gov_return)^(1/n_years) - 1
+prod(1+us_mo_returns$inflation)^(1/n_years) - 1
 
 #####################################
 ######### YEARLY RETURNS ############
-us_temp <- us_monthly_returns
+us_temp <- us_mo_returns
 us_temp["sp500_cum"] <- 1
 us_temp["us_gov_cum"] <- 1
 us_temp["inflation_cum"] <- 1
 
-for (i in 1:nrow(us_monthly_returns)){
+for (i in 1:nrow(us_mo_returns)){
   if (i %% 12 != 1){ # for any month besides January, cumulate montly returns.
     us_temp[i, "sp500_cum"] <- us_temp[i-1, "sp500_cum"] * (1+us_temp[i, "sp500_return"])
     us_temp[i, "us_gov_cum"] <- us_temp[i-1, "us_gov_cum"] * (1+us_temp[i, "us_gov_return"])
@@ -79,15 +79,56 @@ for (i in 1:nrow(us_monthly_returns)){
   }
 }
 
-us_yearly_returns <- us_temp[seq(12, 900, by=12), c(1,6,5,7)]
-us_yearly_returns[, 2:4] <- us_yearly_returns[, 2:4] - 1
-names(us_yearly_returns) <- c("date", "us_gov_return", "sp500_return", "inflation")
+us_yr_returns <- us_temp[seq(12, 900, by=12), c(1, 6, 5, 7)]
+us_yr_returns[, 2:4] <- us_yr_returns[, 2:4] - 1
+names(us_yr_returns) <- c("date", "us_gov_return", "sp500_return", "inflation")
 
-prod(1+us_yearly_returns$sp500_return)^(1/n_years) - 1
-prod(1+us_yearly_returns$us_gov_return)^(1/n_years) - 1
-prod(1+us_yearly_returns$inflation)^(1/n_years) - 1
+prod(1+us_yr_returns$sp500_return)^(1/n_years) - 1
+prod(1+us_yr_returns$us_gov_return)^(1/n_years) - 1
+prod(1+us_yr_returns$inflation)^(1/n_years) - 1
 
-sd(us_yearly_returns$sp500_return)
-sd(us_yearly_returns$us_gov_return)
+sd(us_yr_returns$sp500_return)
+sd(us_yr_returns$us_gov_return)
 
-write.csv(us_yearly_returns, file = "us_yearly_returns.csv", row.names = FALSE)
+write.csv(us_yr_returns, file = "us_yearly_returns.csv", row.names = FALSE)
+
+#####################################
+######### MAXIMUM DRAWDOWN ##########
+drawdown <- function(returns, start=1, end=length(returns)) {
+  # Compute drawdown of given asset returns and period.
+  # Args:
+  #   returns (double[]): asset returns vector.
+  #   start (int): start index.
+  #   end (int): end index.
+  # Returns:
+  #   (double): drawdown of given asset, throught given period.
+
+  # Get cumulative returns of an asset, throught given period.
+  cum_ret <- cumprod(1+returns[start:end])
+  n <- end - start + 1
+  # Find maximum for this period.
+  mx <- max(cum_ret)
+  # Calculate drawdown.
+  dd <- mx - cum_ret[n]
+  return(if(dd >= 0) dd/mx else 0)
+}
+drawdown(us_yr_returns$sp500_return, 55, 61)
+
+maxiumum_drawdown <- function(returns, start=1, end=length(returns)) {
+  # Compute maxiumum drawdown of given asset returns and period.
+  # Args:
+  #   returns (double[]): asset returns vector.
+  #   start (int): start index.
+  #   end (int): end index.
+  # Returns:
+  #   (double): maximum drawdown of given asset, throught given period.
+
+  dds <- start:end
+  # Find drowdown for shorter periods, shifting starting point.
+  dds <- sapply(dds, function (i) drawdown(returns, start=start, end=i))
+  # Find maximum drowdown.
+  return(max(dds))
+}
+maxiumum_drawdown(us_yr_returns$sp500_return)
+
+
