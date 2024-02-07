@@ -1,8 +1,8 @@
 ###################################
 ######### IMPORT DATA #############
-sp500_raw <- read.csv("risk_tolerance_data/sp500_data.csv", header = TRUE,
+sp500_raw <- read.csv("data/input/usd/sp500_data.csv", header = TRUE,
                       colClasses = c("character", "numeric", "numeric", "numeric", "numeric"))
-us_gov_bonds_raw <- read.csv("risk_tolerance_data/Int_mo_gov_bond.csv", header = TRUE)
+us_gov_bonds_raw <- read.csv("data/input/usd/Int_mo_gov_bond.csv", header = TRUE)
 
 #####################################
 #########  CLEAN DATA ###############
@@ -45,7 +45,7 @@ names(us_mo_returns) <- c("date", "us_gov_return", "sp500_return", "inflation")
 us_mo_returns <- us_mo_returns[-1,]
 
 rownames(us_mo_returns) <- us_mo_returns$date
-#write.csv(us_mo_returns, file = "us_monthly_returns.csv", row.names = FALSE)
+#write.csv(us_mo_returns, file = "data/output/us_monthly_returns.csv", row.names = FALSE)
 
 # Histograms.
 hist(us_mo_returns$sp500_return, breaks = seq(-0.25, 0.2, 0.005))
@@ -93,7 +93,7 @@ sd(us_yr_returns$sp500_return)
 sd(us_yr_returns$us_gov_return)
 
 rownames(us_yr_returns) <- us_yr_returns$date
-#write.csv(us_yr_returns, file = "us_yearly_returns.csv", row.names = FALSE)
+#write.csv(us_yr_returns, file = "data/output/us_yearly_returns.csv", row.names = FALSE)
 
 
 
