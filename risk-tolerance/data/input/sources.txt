@@ -1,0 +1,62 @@
+============================================
+================ USA =======================
+============================================
+
+NYU Stern, A. Damodaran, Historical returns for everything in US (1928-2023).
+https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html
+Contains: yearly S&P 500 TR, 3-mo T-Bill, 10-yr Bond, Baa crop bond, real estate, gold, inflation.
+
+Yale University, R. Shiller, US stock markets (1871-2023), home prices (1890-2023)
+http://www.econ.yale.edu/~shiller/data.htm
+Contains: monthly S&P 500 + dividends, real estate, inflation.
+
+US CPI yearly (1801-2023)
+https://stooq.pl/q/d/?s=cpiyus.m&c=0&d1=18010131&d2=20240131&i=y
+US CPI monthly (2010-2024)
+https://stooq.pl/q/d/?s=cpimus.m&c=0&d1=20100531&d2=20240131&i=m
+
+============================================
+================ Global ====================
+============================================
+
+University Rotterdam, L. Swinkels, International monthly government bond returns (US 1947-2022)
+https://datarepository.eur.nl/articles/dataset/Data_Treasury_Bond_Return_Data_Starting_in_1962/8152748
+Contains: monthly US, Germany, Japan, France, UK, Australia, Canada, Norway, Sweden bonds.
+
+MSCI ACWI yearly (1987-2023)
+https://curvo.eu/backtest/en/market-index/msci-acwi?currency=usd
+
+FTSE World Gov. Bond (DM) yearly (1985-2023)
+https://curvo.eu/backtest/en/market-index/ftse-world-government-bond-developed-markets?currency=usd
+
+Gold (ozt) / USD yearly/quarterly/monthly (1793-2024)
+https://stooq.pl/q/d/?s=xauusd&c=0&d1=17930301&d2=20240131&i=m
+
+Bitcoin / USD monthly (2010-2024)
+https://stooq.pl/q/d/?s=btcusd&c=0&d1=20100719&d2=20240131&i=m
+
+============================================
+================ Poland ====================
+============================================
+
+WIG monthly (1991-2024)
+https://stooq.pl/q/d/?s=wig&c=0&d1=19910416&d2=20240131&i=m
+WIG20TR monthly (2004-2024)
+https://stooq.pl/q/d/?s=wig20tr&c=0&d1=20041231&d2=20240131&i=m
+mWIG40TR monthly (2009-2024)
+https://stooq.pl/q/d/?s=mwig40tr&c=0&d1=20091231&d2=20240131&i=m
+sWIG80TR monthly (2009-2024)
+
+TBSP monthly (2006-2024)
+https://stooq.pl/q/d/?s=%5Etbsp&c=0&d1=20061229&d2=20240131&i=m
+
+BTCPLN monthly (2010-2024)
+https://stooq.pl/q/d/?s=btcpln&c=0&d1=20100719&d2=20240131&i=m
+
+Gold (ozt) / PLN monthly (1984-2024)
+https://stooq.pl/q/d/?s=xaupln&c=0&d1=19840109&d2=20240131&i=m
+
+PL CPI yearly (1982-2023)
+https://stooq.pl/q/d/?s=cpiypl.m&c=0&d1=19820129&d2=20231231&i=y
+PL CPI monthly (1982-2023)
+https://stooq.pl/q/d/?s=cpimpl.m&c=0&d1=19820129&d2=20231231&i=m
