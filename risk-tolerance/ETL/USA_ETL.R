@@ -1,3 +1,28 @@
+# USA_ETL.R extracts, transforms and loads USA market data.
+
+# USA market data consists of many sources: NYU Stern (A. Damodaran),
+# Yale (R. Shiller) and stooq site. First two are in xls files, which require
+# more work, but contain many years of historical data. Stooq datasets are used
+# only for US CPI (both monthly and yearly frequency).
+
+# NYU Stern (A. Damodaran) dataset contains returns of almost any type of US asset:
+# stocks, t-bills, bonds, corp bonds, real estate, gold and inflation. This is at
+# the cost of frequency -- yearly returns.
+
+# Yale (R. Shiller) dataset contains returns of stocks and home prices at monthly
+# frequency. It also contains inflation.
+
+# These datasets contain overlaping data, which can be used for testing data and methods.
+
+# Library for reading Excel files.
+library(readxl)
+
+# Read NYU Stern (A. Damodaran) excel file.
+damodaran_excel <- read_excel("data/input/USA/nyu_stern_damodaran.xls", sheet = "Returns by year")
+# Read Yale (R. Shiller) excel files.
+shiller_stock_excel <- read_excel("data/input/USA/shiller/yale_shiller_stocks.xls", sheet = "Data")
+shiller_home_excel <- read_excel("data/input/USA/shiller/yale_shiller_home.xls", sheet = "Data")
+
 ###################################
 ######### IMPORT DATA #############
 sp500_raw <- read.csv("data/input/usd/sp500_data.csv", header = TRUE,
