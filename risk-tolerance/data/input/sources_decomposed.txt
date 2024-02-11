@@ -1,0 +1,26 @@
+============================================
+================ USA =======================
+============================================
+
+NYU Stern, A. Damodaran, Historical returns for everything in US (1928-2023).
+
+10-year T. Bonds from Federal Reserve data, combining 2 series (with some errors?):
+Composite Yield on U.S. Treasury Bonds with Maturity over 10 Years (1925-1953)
+https://fred.stlouisfed.org/series/H1RIFLGFY10PNM
+
+Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity,
+Quoted on an Investment Basis (GS10) (1954-2023)
+https://fred.stlouisfed.org/series/GS10
+
+Yale University, R. Shiller, US stock markets (1871-2023)
+Note 7 from "Irrational Exuberance" about interest rates data
+
+Starting in 1953, the interest rate is the yield of a monthly ten-year Treasury Bond
+series from the U.S. Board of Governors of the Federal Reserve System. Before 1953, the
+data are interpolated to monthly from annual average data in Sidney Homer, A History
+of Interest Rates (New Brunswick, N.J.: Rutgers University Press, 1963); for 1871–1900,
+from Table 38, col. 3, p. 288; for 1901–20, from Table 45, col. 14, p. 341; for 1921–46, from
+Table 48, col. 1, p. 352; and for 1947–53, from Table 50, col. 1, p. 359. Jeremy Siegel has
+a very similar government bond yield series (www.jeremysiegel.com) that he has
+studied in detail in his article “The Real Rate of Interest from 1800–1990: A Study of
+the U.S. and the U.K.,” Journal of Monetary Economics, 29 (1992): 227–52.
