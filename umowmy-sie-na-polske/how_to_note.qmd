@@ -1,0 +1,94 @@
+---
+title: "How to note"
+author: "Bartosz Chmiela"
+format: pdf
+editor: visual
+---
+
+## Disclaimer
+
+This guide is based on a great series called ["The Art of Reading"](https://www.youtube.com/playlist?list=PLG90WrvLcO6sJTNCHS1V9E-3vFnWGJ8g5) by Jared Henderson on Youtube.
+
+# [How to read better](https://youtu.be/A5ucvNAENjU?si=ETqivXUC5fL6_CXo)
+
+The point is, that we want to become better readers, not fast readers!
+
+## Reading is like exercise
+
+Analogy to going to the gym to be in better shape – most of us find going there hard to do. In the same way people want to have read more books, but we find it hard to read/work on that.
+
+Work on intensity and duration – read more and understand more, by practicing.
+
+## Read a book more than once
+
+After reading first time, you don't see what the writer intends (what the thesis is). This is why we can't understand how the early pieces don't fit to the plan.
+
+Understanding the book is holistic — you need to understand the whole to understand the parts, even if those help us to understand the whole.
+
+Read book twice. First read it fast to see what the point is. After establishing that, read it again, slowly. It does not need to happen immediately.
+
+## Take notes after reading
+
+It is actually a set up for a second read! When reading second time, you will decide which notes to keep. Notes need to be concise and organized, better to take them later.
+
+## Craft a plan for reading
+
+Do you want to further your research or interests? Explore an author? When choosing books, you actually choose what kind of person you want to be (as with anything that engage our self-formation).
+
+## Get in habit of carrying a book with you
+
+Just make the habit of reading.
+
+# [How to take great notes (and remember what you read)](https://youtu.be/LcYcj7oFglQ?si=_r-cto5HUUdkKy4V)
+
+## Take notes like you're going to teach
+
+Turn yourself into a teacher, so note not like you are going to need the notes to study, but to teach another student.
+
+This is sometimes called the Feynman method.
+
+There are 3 steps:
+
+1.  Annotation
+
+2.  Exporting
+
+3.  Outlining
+
+## Annotation
+
+You can also call it an *active reading*, which requires 3 components:
+
+-   intentional focus,
+
+-   minimal distractions (right environment),
+
+-   proper annotations.
+
+Read, but haver in mind, that you want to explain it to the beginer. This is why, you are going to look for some things: jargon (which needs to be explained), key points (or important passages) and unclear fragments. Here are a few ways of annotating:
+
+-   underline for jargon,
+
+-   star for important passages,
+
+-   question mark for difficult parts.
+
+You can also bookmark pages that are done with annotations to remind yourself which pages need to be noted later on.
+
+The key to the active reading is the right frame of mind!
+
+## Exporting and outlining
+
+Now's the time to export your annotations. There are some studies that say making notes by hand improves memory retention, so it's better for studying purposes.
+
+I like to keep stuff organized on my PC. There is software like *Obsidian* and *Roam* that help with that. I'm using *Quarter*, because I'm interested in tools that merge a lot of other stuff, in this case *R* programming language.
+
+Write a sentence or two summary of the section and outline (like bullet points), which should reflect how you would teach someone. Gather the vocabulary.
+
+This is your first draft, it's going to be revised many times over to improve it.
+
+Repeat this process for every section.
+
+## The Omni-outline (or lesson plan)
+
+Now you have many outlines, time to turn it into a bigger one about the entire book. The granularity depends on what is important to you, sometimes you can get into details, sometimes you can get only an abstract view of the whole book.
