@@ -1,4 +1,4 @@
-x <- read.csv("data/input/Poland/OECD.SDD.STES,DSD_STES@DF_FINMARK,4.0+POL.M.IR3TIB+IRLT.PA......csv")
+zx <- read.csv("data/input/Poland/OECD.SDD.STES,DSD_STES@DF_FINMARK,4.0+POL.M.IR3TIB+IRLT.PA......csv")
 x <- x[x$Measure == "Long-term interest rates", c("TIME_PERIOD", "OBS_VALUE")]
 x <- x[72:nrow(x),]
 rownames(x) <- 1:nrow(x)
@@ -25,6 +25,8 @@ lines(cumprod(1+tbsp_r), col = "red")
 # For additional accuracy we can use 2001-01 -> 2005-10 from OECD
 # then 2005-11 -> 2006-12 from stooq bond yields
 # then TBSP
+
+# You can add short term interest to mix and obtain results closer to TBSP!
 
 # Oldest polish bond fund as a proxy
 # https://stooq.pl/q/d/?s=2848.n
