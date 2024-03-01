@@ -101,15 +101,17 @@ format.to.percentage <- function(returns, n=length(returns)) {
   #'    of splitted returns.
 
   periods <- names(returns)
-  start_date <- periods[1]
-  end_date <- periods[length(periods)]
+  start_date <- as.Date(periods[1])
+  # Subtract one year.
+  start_date <- seq(start_date, length.out = 2, by="-1 year")[2]
+  end_date <- as.Date(periods[length(periods)])
   # For each return, split it into n equal returns.
   transformed_returns <- unlist(lapply(returns,
                                        function(returns) rep((1+returns)^(1/n)-1, n)))
   # Get sequence of dates for target returns.
-  periods_target <- seq(start_date, end_date, by=paste0(n, " months"))
-  names(transformed_returns) <- periods_target
-  # TODO finish dates.
+  periods_target <- seq(start_date+1, end_date+1, by=paste0(12/n, " month"))-1 # TODO explain yourself
+  names(transformed_returns) <- periods_target[-1] # TODO explain
+
   return(transformed_returns)
 }
 
@@ -145,10 +147,13 @@ transform.returns <- function(returns, freq=12, target_freq=1) {
 }
 
 tbsp<-read.stooq.asset.price("./data/input/Poland/tbsp_m.csv")
-tbsp_returns <- returns.from.prices(tbsp)
-tbsp_returns_yr <- transform.returns(tbsp_returns[c(-205,-206)])
+tbsp_returns <- returns.from.prices(tbsp)[c(-205,-206)]
+tbsp_returns_yr <- transform.returns(tbsp_returns)
 x<-.split.returns(tbsp_returns_yr, 12)
 
-d1 <- as.Date("2022-12-31")
-d2 <- as.Date("2023-12-31")
-seq(d1, d2, by="2 month")
+plot(as.Date(names(tbsp_returns)),
+     cumprod(tbsp_returns+1),
+     type = "l",
+     xlim = c(as.Date("2007-01-31"), as.Date("2023-12-31"))
+)
+lines(as.Date(names(tbsp_returns)), cumprod(x+1), type = "l", col="red")
