@@ -21,6 +21,37 @@ read.stooq.asset.price <- function(file) {
   return(closing.price)
 }
 
+.add.months <- function(date, n) seq(date, by = paste (n, "months"), length = 2)[2]
+
+read.oecd.yield <- function(file, term="long") {
+  #' Read bond yields from .csv file downloaded from data-explorer.oecd.org.
+  #'
+  #' @param file character. A string with oecd data filename.
+  #' @param term character. A string indicating long or short term interest.
+  #' @return yields numeric. A named numeric vector with total returns.
+
+  oecd <- read.csv(file)
+  measure <- tolower(term)
+  # Capitalize first letter to match OECD format.
+  substr(measure, 1, 1) <- toupper(substr(measure, 1, 1))
+
+  # Get yields.
+  oecd <- oecd[oecd$Measure ==  paste0(measure, "-term interest rates"), ]
+  yields <- oecd$OBS_VALUE/100 # to make it a percent
+
+  # Get first and last date + 1 month
+  first_date <- as.Date(paste0(oecd$TIME_PERIOD[1], "-01"))
+  first_date <- .add.months(first_date, 1)
+  last_date <- as.Date(paste0(oecd$TIME_PERIOD[nrow(oecd)], "-01"))
+  last_date <- .add.months(last_date, 1)
+  # Prepare sequence (shifted by 1 month) from first to last date
+  # Subtract 1 day to get last day of previous month (this is why earlier add 1 month)
+  periods <- seq(first_date, last_date, by="month") - 1
+  names(yields) <- periods
+
+  return(yields)
+}
+
 returns.from.prices <- function(prices) {
   #' Obtain total returns from prices.
   #'
@@ -39,6 +70,36 @@ returns.from.prices <- function(prices) {
   names(returns) <- dates[-1]
 
   return(returns)
+}
+
+returns.from.yield <- function(yield, maturity=10) {
+  #' Obtain total returns from bond yields.
+  #'
+  #' Details of this method can be found in
+  #' Swinkels L., "Treasury bond return data starting in 1962"
+  #'
+  #' @param yield numeric. A named numeric vector with bond yields.
+  #' @param maturity numeric. A scalar indicating maturity of those bonds.
+  #' @return numeric. A named vector of total returns.
+
+  # Interest rate sensitivity or
+  # Modified duration of risk-free bond at par value.
+  .d.t <- function(y_t, m_t) {
+    ( 1 - 1/(1+y_t/2)^(2*m_t) ) / y_t
+  }
+  # Convexity of par bond.
+  .c.t <- function(y_t, m_t) {
+    2/y_t^2 * ( 1 - 1/(1+y_t/2)^(2*m_t))
+    - 2*m_t / (y_t * (1 + y_t/2)^(2*m_t+1))
+  }
+  # Returns.
+  .r.t <- function(y_t_1, y_t, m_t) {
+    (1+y_t_1)^(1/12)-1
+    - .d.t(y_t)*(y_t - y_t_1)
+    + .5 * .c.t(y_t)*(y_t-y_t_1)^2
+  }
+  n <- length(yield)
+  return(.r.t(yield[1:(n-1)], yield[-1], maturity))
 }
 
 format.to.percentage <- function(returns, n=length(returns)) {
@@ -139,17 +200,13 @@ transform.returns <- function(returns, freq=12, target_freq=1) {
   #' @param freq numeric. A scalar indicating current frequency of returns.
   #' @param target_freq numeric. A scalar indicating target frequency of returns.
 
-  # How many periods? What are they?
-  n_periods <- length(returns)
-  periods <- names(returns)
-
   if(freq > target_freq){ # If you want to compound returns,
     # How many periods are in target period?
     # 1/freq is the length of period in terms of year, analogously 1/target,
     # so 1/target / 1/freq = freq/target
     n_prd_in_tgt <- freq / target_freq
 
-    transformed_returns <- .coumpound.returns(returns, n_prd_in_tgt)
+    transformed_returns <- .compound.returns(returns, n_prd_in_tgt)
   }
   else { # If you want to split returns into smaller chunks.
     n_prd_in_tgt <- target_freq / freq
@@ -176,6 +233,24 @@ add.plot.returns <- function(returns, colour="red") {
 
   lines(as.Date(names(returns)), cumprod(1+returns), col = colour)
 }
+
+select.returns <- function(returns, from, to) {
+  #' Select a returns from some date to some other date.
+  #'
+  #' @param returns numeric. A named numeric vector of returns.
+  #' @param from character. A string with date from which to start.
+  #' @param to character. A string with date at which to stop.
+  #' @retun numeric. A named numeric vector with returns from given date
+  #'    to given date.
+
+  periods <- names(returns)
+  start <- which(periods == from)
+  end <- which(periods == to)
+
+  return(returns[start:end])
+}
+
+
 
 tbsp<-read.stooq.asset.price("./data/input/Poland/tbsp_m.csv")
 tbsp_returns <- returns.from.prices(tbsp)[c(-205,-206)]
