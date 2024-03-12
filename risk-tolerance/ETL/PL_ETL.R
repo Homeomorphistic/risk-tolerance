@@ -1,22 +1,18 @@
-zx <- read.csv("data/input/Poland/OECD.SDD.STES,DSD_STES@DF_FINMARK,4.0+POL.M.IR3TIB+IRLT.PA......csv")
-x <- x[x$Measure == "Long-term interest rates", c("TIME_PERIOD", "OBS_VALUE")]
-x <- x[72:nrow(x),]
-rownames(x) <- 1:nrow(x)
+# PL_ETL.R
+#' Extract, transform and load datasets from Poland.
+#'
+#' Datasets contain CPI of PLN, bond and equity index.
 
-d_t <- function(y_t, m_t = 10) ( 1 - 1/(1+y_t/2)^(2*m_t) ) / y_t
-c_t <- function(y_t, m_t=10) 2/y_t^2 * ( 1 - 1/(1+y_t/2)^(2*m_t)) - 2*m_t / (y_t * (1 + y_t/2)^(2*m_t+1))
-r_t <- function(y_t_1, y_t, m_t=10) (1+y_t_1)^(1/12)-1 - d_t(y_t)*(y_t - y_t_1) + .5 * c_t(y_t)*(y_t-y_t_1)^2
+# Source ETL script
+source("ETL/ETL.R")
 
-y <- x$OBS_VALUE/100
-n <- length(y)
-r <- r_t(y[1:(n-1)], y[-1])
-
-tbsp <- read.csv("data/input/Poland/tbsp_m.csv")
-tbsp <- tbsp[-nrow(tbsp), c("Data", "Zamkniecie")]
-y <- tbsp$Zamkniecie
-tbsp_r <- y[-1] / y[1:(n-1)] - 1
-plot(cumprod(1+r), type = "l")
-lines(cumprod(1+tbsp_r), col = "red")
+# Before extracting check for at least two errors (look pl_sources.md)
+pl_cpi_yoy <- read.stooq.rate("data/input/Poland/cpiypl_m_m.csv")
+pl_cpi_mom <- read.stooq.rate("data/input/Poland/cpimpl_m_m.csv")
+# Remove dates before GPW and WIG index.
+cpi_last_date <- names(pl_cpi_yoy)[length(pl_cpi_yoy)]
+pl_cpi_yoy <- select.returns(pl_cpi_yoy, "1991-04-30", cpi_last_date)
+pl_cpi_mom <- select.returns(pl_cpi_mom, "1991-04-30", cpi_last_date)
 
 # IMPORTANT NOTES
 # Poland 10-Year Government Bond Yield is measured starting 2005-11-30

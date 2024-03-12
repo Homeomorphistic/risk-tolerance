@@ -263,17 +263,3 @@ select.returns <- function(returns, from, to) {
 
   return(returns[start:end])
 }
-
-
-
-tbsp<-read.stooq.asset.price("./data/input/Poland/tbsp_m.csv")
-tbsp_returns <- returns.from.prices(tbsp)[c(-205,-206)]
-tbsp_returns_qr <- transform.returns(tbsp_returns, 12, 4)
-tbsp_returns_hf <- transform.returns(tbsp_returns, 12, 2)
-tbsp_returns_yr <- transform.returns(tbsp_returns, 12, 1)
-
-plot.returns(tbsp_returns, "tbsp monthly")
-add.plot.returns(transform.returns(tbsp_returns, 12, 1), "red")
-add.plot.returns(transform.returns(tbsp_returns, 12, 4), "blue")
-
-pl_cpi <- read.stooq.rate("data/input/Poland/cpiypl_y.csv")
