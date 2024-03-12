@@ -4,21 +4,35 @@
 library(docstring)
 
 read.stooq.asset.price <- function(file) {
-  #' Reads asset closing prices from csv file downloaded from stooq.pl.
+  #' Read asset closing prices from csv file downloaded from stooq.pl.
   #'
   #' Reads csv file from stooq.pl and returns closing prices of an asset.
   #' Also names vector position as dates.
   #'
-  #' @param file character. The name of the stooq.pl file which the data are to be read from.
+  #' @param file character. A string with filepath of the stooq .csv file.
   #' @return numeric. A vector of closing prices of a given asset.
 
-  # Read file and get closing prices.
   sq <- read.csv(file)
   closing.price <- sq$Zamkniecie
   # Name vector postions as dates.
   names(closing.price) <- sq$Data
 
   return(closing.price)
+}
+
+read.stooq.rate <- function(file) {
+  #' Read closing rates of economic indicators.
+  #'
+  #' Reads csv file from stooq.pl and returns closing rates of an indicator.
+  #' Also names vector position as dates. This function is identical to
+  #' read.stooq.asset.price, but has different name, so that we can omit
+  #' any missunderstandings.
+  #'
+  #' @param file character. A string with filepath of the stooq .csv file.
+  #' @return numeric. A vector of closing rates of a given indicator.
+
+  # Just do the same as with asset prices.
+  return(read.stooq.asset.price(file)/100)
 }
 
 .add.months <- function(date, n) seq(date, by = paste (n, "months"), length = 2)[2]
@@ -261,3 +275,5 @@ tbsp_returns_yr <- transform.returns(tbsp_returns, 12, 1)
 plot.returns(tbsp_returns, "tbsp monthly")
 add.plot.returns(transform.returns(tbsp_returns, 12, 1), "red")
 add.plot.returns(transform.returns(tbsp_returns, 12, 4), "blue")
+
+pl_cpi <- read.stooq.rate("data/input/Poland/cpiypl_y.csv")
