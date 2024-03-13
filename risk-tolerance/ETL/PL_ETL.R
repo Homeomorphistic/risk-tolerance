@@ -9,6 +9,7 @@ source("ETL/ETL.R")
 # Before extracting check for at least two errors (look pl_sources.md)
 pl_cpi_yoy <- read.stooq.rate("data/input/Poland/cpiypl_m_m.csv")
 pl_cpi_mom <- read.stooq.rate("data/input/Poland/cpimpl_m_m.csv")
+pl_int_mo <- read.stooq.rate("data/input/Poland/inrtpl_m_m.csv")
 # Remove dates before GPW and WIG index.
 cpi_last_date <- names(pl_cpi_yoy)[length(pl_cpi_yoy)]
 pl_cpi_yoy <- select.returns(pl_cpi_yoy, "1991-04-30", cpi_last_date)

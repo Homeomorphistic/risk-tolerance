@@ -37,6 +37,8 @@ read.stooq.rate <- function(file) {
 
 .add.months <- function(date, n) seq(date, by = paste (n, "months"), length = 2)[2]
 
+.add.years <- function(date, n) seq(date, by = paste (n, "years"), length = 2)[2]
+
 read.oecd.yield <- function(file, term="long") {
   #' Read bond yields from .csv file downloaded from data-explorer.oecd.org.
   #'
@@ -248,7 +250,7 @@ add.plot.returns <- function(returns, colour="red") {
   lines(as.Date(names(returns)), cumprod(1+returns), col = colour)
 }
 
-select.returns <- function(returns, from, to) {
+select.returns <- function(returns, from, to, by=1) {
   #' Select a returns from some date to some other date.
   #'
   #' @param returns numeric. A named numeric vector of returns.
@@ -261,5 +263,5 @@ select.returns <- function(returns, from, to) {
   start <- which(periods == from)
   end <- which(periods == to)
 
-  return(returns[start:end])
+  return(returns[seq(start, end, by=by)])
 }
