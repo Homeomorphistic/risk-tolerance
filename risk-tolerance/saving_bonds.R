@@ -30,7 +30,7 @@ edo <- function(from="2012-12-31", to="2023-12-31", margin=.0125, tax=.19, penal
 
   # Get year-over-year CPI from two months prior.
   cpi <- select.returns(pl_cpi_yoy, from, to, by=12)
-
+  print(cpi)
   # Most of the returns are cpi + margin,
   edo_returns <- cpi + margin
   # But every 10th year (and 1st) you restet to interest rate + margin.
@@ -39,4 +39,11 @@ edo <- function(from="2012-12-31", to="2023-12-31", margin=.0125, tax=.19, penal
   names(edo_returns) <- periods
   return(edo_returns)
 }
-edo(from="2010-12-31", to="2011-12-31", margin = 0)
+edo(from="2011-12-31", to="2023-12-31", margin = 0)
+
+from=as.Date("1998-02-28")+1
+to=as.Date("2024-01-31")+1
+s=seq(from, to, by="months")-1
+setdiff(as.character(s), names(pl_int_mo))
+setdiff(as.character(s), names(pl_cpi_yoy))
+setdiff(as.character(s), names(pl_cpi_mom))
