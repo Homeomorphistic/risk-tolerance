@@ -144,7 +144,6 @@ read.imf.rate <- function(file, indicator="Central Bank Policy Rate") {
 
   return(rates/100) # to get percent.
 }
-x<-read.imf.rate("data/input/Poland/imf_Interest_Rates.xlsx")
 
 returns.from.prices <- function(prices) {
   #' Obtain total returns from prices.
@@ -345,5 +344,19 @@ select.returns <- function(returns, from, to, by=1) {
 }
 
 contains.all.dates <- function(returns, from, to) {
-  #TODO
+  #' Check if returns contain range of dates.
+  #'
+  #' @param returns numeric. A named vector of returns.
+  #' @param from character. A string with date from which to start.
+  #' @param to character. A string with date at which to stop.
+  #' @return Date. A vector of missing dates.
+
+  # Add one day, to get 1st day of next.
+  from <- as.Date(from) + 1
+  to <- as.Date(to) + 1
+  # Subtract one day, to get last day of original month.
+  range <- seq(from, to, by="month") - 1
+  range <- as.character(range)
+
+  return(setdiff(range, names(returns)))
 }
