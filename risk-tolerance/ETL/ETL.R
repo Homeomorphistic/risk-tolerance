@@ -1,7 +1,7 @@
 #' Cotains general functions for ETL.
 
-# Attach library for docstrings.
 library(docstring)
+library(readxl)
 
 read.stooq.asset.price <- function(file) {
   #' Read asset closing prices from csv file downloaded from stooq.pl.
@@ -35,9 +35,55 @@ read.stooq.rate <- function(file) {
   return(read.stooq.asset.price(file)/100)
 }
 
-.add.months <- function(date, n) seq(date, by = paste (n, "months"), length = 2)[2]
+.add.date.periods <- function(dates, n, period = "month") {
+  #' Add a period to dates.
+  #'
+  #' @param dates character. A vector of dates.
+  #' @param n numeric. A number of periods to add/subtract.
+  #' @param period character. A character string, containing
+  #'    one of "day", "week", "month", "quarter" or "year".
+  #' @return Date. A vector of moved dates.
 
-.add.years <- function(date, n) seq(date, by = paste (n, "years"), length = 2)[2]
+  dates <- as.Date(dates)
+  as.Date(sapply(dates,
+                 function(date)
+                   seq(date, by = paste (n, period), length = 2)[2]),
+          origin = "1970-01-01")
+}
+
+.add.months <- function(dates, n) {
+  #' Add months to dates.
+  #'
+  #' @param dates character. A vector of dates.
+  #' @param n numeric. A number of months to add/subtract.
+  #' @return Date. A vector of moved dates.
+
+  return(.add.date.periods(dates, n, "month"))
+}
+
+.add.years <- function(dates, n){
+  #' Add years to dates.
+  #'
+  #' @param dates character. A vector of dates.
+  #' @param n numeric. A number of years to add/subtract.
+  #' @return Date. A vector of moved dates.
+
+  return(.add.date.periods(dates, n, "year"))
+}
+
+.last.day.from.first <- function(dates) {
+  #' Find the last day of a given 1st day of month.
+  #'
+  #' @param dates character. A vector of 1st day dates.
+  #' @return dates Date. A vector of last day of the month.
+
+  dates <- as.Date(dates)
+  # Add one month, to get 1st day of next.
+  dates <- .add.months(dates, 1)
+  # Subtract one day, to get last day of original month.
+  dates <- dates - 1
+  return(dates)
+}
 
 read.oecd.yield <- function(file, term="long") {
   #' Read bond yields from .csv file downloaded from data-explorer.oecd.org.
@@ -67,6 +113,38 @@ read.oecd.yield <- function(file, term="long") {
 
   return(yields)
 }
+
+read.imf.rate <- function(file, indicator="Central Bank Policy Rate") {
+  #' Read closing rates of economic indicators.
+  #'
+  #' Reads xlsx file from data.imf.org and returns closing rates of an indicator.
+  #' Also names vector position as dates.
+  #'
+  #' @param file character. A string with filepath of the imf .xlsx file.
+  #' @return numeric. A vector of closing rates of a given indicator.
+
+  imf <- as.data.frame(read_xlsx(file, sheet="Monthly", skip=7))
+  # Remove 3 unused columns
+  imf <- imf[, -c(2,3,4)]
+  n_col <- ncol(imf) - 1 # do not count first column with name.
+  # Replace "..." to NAs.
+  imf[imf=="..."] <- NA
+  # Find which row corresponds to indicator.
+  ind <- which(imf$Indicator == indicator)
+
+  rates <- as.numeric(imf[ind, 2:n_col])
+  names(rates) <- colnames(imf)[2:n_col]
+  # Convert names to proper dates. Present format is YYYYMmm.
+  names(rates) <- as.Date(paste0(names(rates), "01"), format = "%YM%m%d")
+
+  # Remove NAs.
+  rates <- rates[!is.na(rates)]
+  # Get last day dates.
+  names(rates) <- .last.day.from.first(names(rates))
+
+  return(rates/100) # to get percent.
+}
+x<-read.imf.rate("data/input/Poland/imf_Interest_Rates.xlsx")
 
 returns.from.prices <- function(prices) {
   #' Obtain total returns from prices.
@@ -264,4 +342,8 @@ select.returns <- function(returns, from, to, by=1) {
   end <- which(periods == to)
 
   return(returns[seq(start, end, by=by)])
+}
+
+contains.all.dates <- function(returns, from, to) {
+  #TODO
 }
