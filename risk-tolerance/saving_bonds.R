@@ -1,16 +1,17 @@
-# saving_bonds.R
+#' saving_bonds.R
 #' This script produces returns from polish saving bonds.
 
-edo <- function(from="2012-12-31", to="2023-12-31", margin=.0125, tax=.19, penalty=.02) {
+source("analysis.R")
+
+edo.returns <- function(from, to, margin=.0125) {
   #' Get EDO saving bonds returns.
   #'
   #' TODO needs details for whole -1 year stuff and other dates.
+  #' TODO add deflation.
   #'
   #' @param from character. First year of return of saving bond.
   #' @param to character. Last year of return of saving bond.
   #' @param margin numeric. Margin to add to index.
-  #' @param tax numeric Tax taken from profits.
-  #' @param penalty numeric. Penalty to pay for buyout before maturity.
   #' @return numeric. A named numeric vector with returns of EDO bond.
 
   from <- as.Date(from)
@@ -30,7 +31,7 @@ edo <- function(from="2012-12-31", to="2023-12-31", margin=.0125, tax=.19, penal
 
   # Get year-over-year CPI from two months prior.
   cpi <- select.returns(pl_cpi_yoy, from, to, by=12)
-  print(cpi)
+
   # Most of the returns are cpi + margin,
   edo_returns <- cpi + margin
   # But every 10th year (and 1st) you restet to interest rate + margin.
@@ -39,11 +40,60 @@ edo <- function(from="2012-12-31", to="2023-12-31", margin=.0125, tax=.19, penal
   names(edo_returns) <- periods
   return(edo_returns)
 }
-edo(from="2011-12-31", to="2023-12-31", margin = 0)
 
-from=as.Date("1998-02-28")+1
-to=as.Date("2024-01-31")+1
-s=seq(from, to, by="months")-1
-setdiff(as.character(s), names(pl_int_mo))
-setdiff(as.character(s), names(pl_cpi_yoy))
-setdiff(as.character(s), names(pl_cpi_mom))
+edo.real.returns <- function(from, to, cpi, margin=.0125) {
+  #' Get EDO saving bonds real returns.
+  #'
+  #' @param from character. First year of return of saving bond.
+  #' @param to character. Last year of return of saving bond.
+  #' @param margin numeric. Margin to add to index.
+  #' @param cpi numeric. A vector of CPI.
+  #' @return numeric. A named numeric vector with real returns of EDO bond.
+
+  edo <- edo.returns(from, to, margin)
+  print(edo)
+  cpi <- select.returns(cpi, from, to, 12)
+  print(cpi)
+  return(real.returns(edo, cpi))
+}
+
+edo.total.return <- function(from, to, margin = .0125, tax=.19, penalty=.02) {
+  #' Get total return from some period of EDO saving bond.
+  #'
+  #' TODO works only for 10-year periods
+  #'
+  #' @param from character. First year of return of saving bond.
+  #' @param to character. Last year of return of saving bond.
+  #' @param margin numeric. Margin to add to index.
+  #' @param tax numeric Tax taken from profits.
+  #' @param penalty numeric. Penalty to pay for buyout before maturity.
+  #' @return numeric. Total return of a given EDO bond.
+
+  edo <- edo.returns(from, to, margin)
+  gross_return <- prod(1 + edo) - 1
+  return(gross_return * (1-tax))
+}
+
+edo.total.real.return <- function(from, to, cpi, margin = .0125,
+                                  tax=.19, penalty=.02) {
+  #' Get total real return from some period of EDO saving bond.
+  #'
+  #' TODO works only for 10-year periods
+  #'
+  #' @param from character. First year of return of saving bond.
+  #' @param to character. Last year of return of saving bond.
+  #' @param cpi numeric. A vector of CPI.
+  #' @param margin numeric. Margin to add to index.
+  #' @param tax numeric Tax taken from profits.
+  #' @param penalty numeric. Penalty to pay for buyout before maturity.
+  #' @return numeric. Total real return of a given EDO bond.
+
+  total_return <- edo.total.return(from, to, margin, tax, penalty)
+  cpi <- select.returns(cpi, from, to, 12)
+  return( (1 + total_return) / prod(1+cpi) - 1)
+}
+
+get.all.edo.returns <- function(from, to, margin = .0125,
+                                tax = .19, penalty = .02) {
+
+}
