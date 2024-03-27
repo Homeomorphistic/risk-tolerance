@@ -309,14 +309,15 @@ transform.returns <- function(returns, freq=12, target_freq=1) {
   return(transformed_returns)
 }
 
-plot.returns <- function(returns, title="Returns") {
+plot.returns <- function(returns, title="Returns", log=FALSE) {
   #' Plot cumulative returns.
   #'
   #' @param returns numeric. A numeric named vector of returns.
   #' @param title character. A string with plot title.
 
+  log <- if(log) "y" else ""
   plot(as.Date(names(returns)), cumprod(1+returns),
-       type = "l", ylab = "Returns", xlab = "time", main = title)
+       type = "l", ylab = "Returns", xlab = "time", main = title, log = log)
 }
 
 add.plot.returns <- function(returns, colour="red") {
