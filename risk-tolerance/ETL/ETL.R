@@ -174,25 +174,21 @@ returns.from.yield <- function(yield, maturity=10) {
   #' @param yield numeric. A named numeric vector with bond yields.
   #' @param maturity numeric. A scalar indicating maturity of those bonds.
   #' @return numeric. A named vector of total returns.
+  #' 
+  n <- length(yield)
+  y_t_1 <- yield[1:(n-1)]
+  y_t <- yield[-1]
+  m_t <- maturity
 
   # Interest rate sensitivity or
   # Modified duration of risk-free bond at par value.
-  .d.t <- function(y_t, m_t) {
-    ( 1 - 1/(1+y_t/2)^(2*m_t) ) / y_t
-  }
+  .d.t <-( 1 - 1/(1+y_t/2)^(2*m_t) ) / y_t
   # Convexity of par bond.
-  .c.t <- function(y_t, m_t) {
-    2/y_t^2 * ( 1 - 1/(1+y_t/2)^(2*m_t))
-    - 2*m_t / (y_t * (1 + y_t/2)^(2*m_t+1))
-  }
+  .c.t <- 2/y_t^2 * ( 1 - 1/(1+y_t/2)^(2*m_t))- 2*m_t / (y_t * (1 + y_t/2)^(2*m_t+1))
   # Returns.
-  .r.t <- function(y_t_1, y_t, m_t) {
-    (1+y_t_1)^(1/12)-1
-    - .d.t(y_t)*(y_t - y_t_1)
-    + .5 * .c.t(y_t)*(y_t-y_t_1)^2
-  }
-  n <- length(yield)
-  return(.r.t(yield[1:(n-1)], yield[-1], maturity))
+  .r.t <- (1+y_t_1)^(1/12)-1 - .d.t*(y_t - y_t_1) + .5 * .c.t*(y_t-y_t_1)^2
+
+  return(.r.t)
 }
 
 format.to.percentage <- function(returns, n=length(returns)) {
