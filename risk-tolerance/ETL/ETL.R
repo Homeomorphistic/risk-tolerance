@@ -1,3 +1,4 @@
+# ETL.R
 #' Cotains general functions for ETL.
 
 library(docstring)
@@ -182,13 +183,15 @@ returns.from.yield <- function(yield, maturity=10) {
 
   # Interest rate sensitivity or
   # Modified duration of risk-free bond at par value.
-  .d.t <-( 1 - 1/(1+y_t/2)^(2*m_t) ) / y_t
+  d_t <- ( 1 - 1/(1+y_t/2)^(2*m_t) ) / y_t
   # Convexity of par bond.
-  .c.t <- 2/y_t^2 * ( 1 - 1/(1+y_t/2)^(2*m_t))- 2*m_t / (y_t * (1 + y_t/2)^(2*m_t+1))
+  c_t <- ( 2/y_t^2
+      * ( 1 - 1/(1+y_t/2)^(2*m_t))
+    - 2*m_t / (y_t * (1 + y_t/2)^(2*m_t+1)) )
   # Returns.
-  .r.t <- (1+y_t_1)^(1/12)-1 - .d.t*(y_t - y_t_1) + .5 * .c.t*(y_t-y_t_1)^2
+  r_t <- (1+y_t_1)^(1/12)-1 - d_t*(y_t - y_t_1) + .5 * c_t*(y_t-y_t_1)^2
 
-  return(.r.t)
+  return(r_t)
 }
 
 format.to.percentage <- function(returns, n=length(returns)) {

@@ -1,7 +1,40 @@
 # PL_ETL.R
 #' Extract, transform and load datasets from Poland.
 #'
-#' Datasets contain CPI of PLN, bond and equity index.
+#' Datasets contain CPI of PLN, bond and equity indices,
+#' gold and bitcoin indices. Also bond short and long
+#' term yields.
+#'
+#' Main focus of the script is to recreate the bond index
+#' throughout 1991-2007. The main bond index TBSP starts
+#' in 2006-12-31, but bonds where available since 1991.
+#'
+#' OECD and other sources (IMF, Eurostat) contain long-term
+#' yields in Poland starting in 2001-01 and short-term yields
+#' starting in 1991-06.
+#'
+#' There is a theoretical method for obtaining total returns from
+#' yields, which is described in:
+#' Swinkels L., "Treasury bond return data starting in 1962"
+#'
+#' The method is used to obtain total returns from constant 10-year
+#' (long-term yields) and 3-month (short-term yields) maturity polish bonds.
+#'
+#' For period 1991-2001 short-term yields are used as extension of
+#' bond index.
+#'
+#' For period 2001-2007 a mix of short-term and long-term yields
+#' are used. The weights are obtained from linear regression based
+#' on data from 2007-now:
+#'
+#' TBSP_i = a*long_term_i + b*short_term_i + eps_i
+#'
+#' The weights a and b need to satisfy a+b=1, because they are meant
+#' to represent proportions of a portfolio containing short-term
+#' and long-term bonds. Linear regression coefficients do not satisfy
+#' any additional conditions, so later they are transformed using softmax:
+#'
+#' softmax(x_i) = exp(x_i) / sum^n_i=1 (exp(x_i))
 
 # Source ETL script
 source("ETL/ETL.R")
@@ -22,6 +55,12 @@ pl_int <- read.imf.rate(file.path(common_economy, "imf_Interest_Rates.xlsx"))
 # EQUITY MARKET
 pl_wig <- read.stooq.asset.price(file.path(common_equities, "wig_m.csv"))
 pl_wig <- returns.from.prices(pl_wig)
+
+# ALTERNATIVES
+pl_gold <- read.stooq.asset.price(file.path(common_alt, "xaupln_m.csv"))
+pl_gold <- returns.from.prices(pl_gold)
+pl_btc <- read.stooq.asset.price(file.path(common_alt, "btcpln_m.csv"))
+pl_btc <- returns.from.prices(pl_btc)
 
 # BOND MARKET
 pl_tbsp <- read.stooq.asset.price(file.path(common_bonds, "tbsp_m.csv"))
@@ -58,9 +97,3 @@ pl_tbsp_extended <- c(pl_tbsp_extended, pl_tbsp)
 # Extend begining by short-term yield.
 pl_3mo_start <- select.returns(pl_3mo_returns, "1991-07-31", "2001-01-31")
 pl_tbsp_extended <- c(pl_3mo_start, pl_tbsp_extended)
-
-# ALTERNATIVES
-pl_gold <- read.stooq.asset.price(file.path(common_alt, "xaupln_m.csv"))
-pl_gold <- returns.from.prices(pl_gold)
-pl_btc <- read.stooq.asset.price(file.path(common_alt, "btcpln_m.csv"))
-pl_btc <- returns.from.prices(pl_btc)
