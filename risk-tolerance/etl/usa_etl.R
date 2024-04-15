@@ -1,4 +1,4 @@
-# USA_ETL.R extracts, transforms and loads USA market data.
+# usa_etl.R extracts, transforms and loads USA market data.
 
 # USA market data consists of many sources: NYU Stern (A. Damodaran),
 # Yale (R. Shiller) and stooq site. First two are in xls files, which require

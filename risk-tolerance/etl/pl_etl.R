@@ -1,4 +1,4 @@
-# PL_ETL.R
+# pl_etl.R
 #' Extract, transform and load datasets from Poland.
 #'
 #' Datasets contain CPI of PLN, bond and equity indices,
@@ -36,8 +36,8 @@
 #'
 #' softmax(x_i) = exp(x_i) / sum^n_i=1 (exp(x_i))
 
-# Source ETL script
-source("ETL/ETL.R")
+# Source etl script
+source("etl/etl.R")
 
 # Paths
 common <- "data/input/poland"
@@ -66,12 +66,9 @@ pl_btc <- returns.from.prices(pl_btc)
 pl_tbsp <- read.stooq.asset.price(file.path(common_bonds, "tbsp_m.csv"))
 pl_tbsp <- returns.from.prices(pl_tbsp)
 
-# TODO compare total returns between OECD, stooq and tbsp
-pl_stooq_yield <- read.stooq.rate(file.path(common_bonds, "10yply_b_m.csv"))
-
 # Returns based on average yields.
 pl_10y_returns <- read.oecd.yield(file.path(common_bonds, "oecd_yield_poland.csv"))
-pl_10y_returns <- returns.from.yield(pl_10y_returns)
+pl_10y_returns <- returns.from.yield(pl_10y_returns, maturity = 10)
 
 pl_3mo_returns <- read.oecd.yield(file.path(common_bonds, "oecd_yield_poland.csv"), term="short")
 pl_3mo_returns <- returns.from.yield(pl_3mo_returns, maturity = 0.25)
@@ -84,7 +81,6 @@ pl_tbsp_lm <- select.returns(pl_tbsp, "2007-01-31", "2023-12-31")
 
 softmax <- function(x) exp(x) / sum(exp(x))
 cf <- lm(pl_tbsp_lm~pl_10y_lm + pl_3mo_lm - 1)$coefficients
-cf <- cf/sum(cf)
 cf <- softmax(cf)
 
 # Extend TBSP by weighted returns from yields.
@@ -97,3 +93,7 @@ pl_tbsp_extended <- c(pl_tbsp_extended, pl_tbsp)
 # Extend begining by short-term yield.
 pl_3mo_start <- select.returns(pl_3mo_returns, "1991-07-31", "2001-01-31")
 pl_tbsp_extended <- c(pl_3mo_start, pl_tbsp_extended)
+
+######################################################
+######################################################
+# Put everything into one dataframe.

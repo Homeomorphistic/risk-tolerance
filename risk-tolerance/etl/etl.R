@@ -1,4 +1,4 @@
-# ETL.R
+# etl.R
 #' Cotains general functions for ETL.
 
 library(docstring)
@@ -360,3 +360,20 @@ contains.all.dates <- function(returns, from, to) {
 
   return(setdiff(range, names(returns)))
 }
+
+extend.with.na <- function(returns, from, to, freq=1) {
+  #' Extend returns with NA's.
+  #'
+  #' @param returns numeric. A named vector of returns.
+  #' @param from character. A string with date from which to start.
+  #' @param to character. A string with date at which to stop.
+  #' @return returns numeric. An extended vector of returns.
+
+  # TODO make vector of specified length with only NAs.
+  # then fill the values in dates from returns.
+  start_date <- names(returns)[1]
+  end_date <- names(returns)[length(returns)]
+  periods <- seq(as.Date(from), as.Date(to), by=paste(freq, "month"))
+  return(periods)
+}
+extend.with.na(pl_tbsp_extended, "2023-01-31", "2024-01-31")
