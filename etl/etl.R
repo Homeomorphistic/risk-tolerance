@@ -86,6 +86,20 @@ read.stooq.rate <- function(file) {
   return(dates)
 }
 
+.last.day.sequence <- function(from, to, freq=12) {
+  #' Get a sequence of last day dates.
+  #'
+  #' @param from character. A string with date from which to start (last day of month).
+  #' @param to character. A string with date at which to stop (last day of month).
+  #' @param freq numeric. A frequence of dates, freq/12. Default 1 -> 12/12=1.
+  #' @return returns numeric. An extended vector of returns.
+
+  periods <- seq(as.Date(from)+1, as.Date(to)+1, by=paste(freq/12, "month"))-1
+  return(periods)
+}
+
+
+
 read.oecd.yield <- function(file, term="long") {
   #' Read bond yields from .csv file downloaded from data-explorer.oecd.org.
   #'
@@ -361,19 +375,28 @@ contains.all.dates <- function(returns, from, to) {
   return(setdiff(range, names(returns)))
 }
 
-extend.with.na <- function(returns, from, to, freq=1) {
+extend.with.na <- function(returns, from, to, freq=12) {
   #' Extend returns with NA's.
   #'
   #' @param returns numeric. A named vector of returns.
   #' @param from character. A string with date from which to start.
   #' @param to character. A string with date at which to stop.
+  #' @param freq numeric. A frequence of dates, freq/12. Default 1 -> 12/12=1.
   #' @return returns numeric. An extended vector of returns.
 
-  # TODO make vector of specified length with only NAs.
-  # then fill the values in dates from returns.
+  # Get returns dates.
   start_date <- names(returns)[1]
   end_date <- names(returns)[length(returns)]
-  periods <- seq(as.Date(from), as.Date(to), by=paste(freq, "month"))
-  return(periods)
+  ret_periods <- .last.day.sequence(start_date, end_date, freq)
+
+  # Get periods to cover and fill them with NAs.
+  periods <- .last.day.sequence(from, to, freq)
+  na_filled <- rep(NA, length(periods))
+  names(na_filled) <- periods
+
+  # Find common dates and use them to fill returns where it's proper.
+  common_dates <- intersect(as.character(ret_periods), as.character(periods))
+  na_filled[common_dates] <- returns[common_dates]
+
+  return(na_filled)
 }
-extend.with.na(pl_tbsp_extended, "2023-01-31", "2024-01-31")

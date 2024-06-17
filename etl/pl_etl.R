@@ -67,7 +67,7 @@ pl_tbsp <- read.stooq.asset.price(file.path(common_bonds, "tbsp_m.csv"))
 pl_tbsp <- returns.from.prices(pl_tbsp)
 
 # Returns based on average yields.
-pl_10y_returns <- read.oecd.yield(file.path(common_bonds, "oecd_yield_poland.csv"))
+pl_10y_returns <- read.oecd.yield(file.path(common_bonds, "oecd_yield_poland.csv"), term="long")
 pl_10y_returns <- returns.from.yield(pl_10y_returns, maturity = 10)
 
 pl_3mo_returns <- read.oecd.yield(file.path(common_bonds, "oecd_yield_poland.csv"), term="short")
@@ -96,4 +96,15 @@ pl_tbsp_extended <- c(pl_3mo_start, pl_tbsp_extended)
 
 ######################################################
 ######################################################
+# Earliest date is 1991-06-30 and latest
+first <- names(pl_3mo_returns)[1]
+last <- names(pl_wig)[length(pl_wig)]
+# Extend returns to this date and fill with NAs.
 # Put everything into one dataframe.
+pl_mo_returns <- data.frame(money_market=extend.with.na(pl_3mo_returns, first, last),
+                            bond=extend.with.na(pl_tbsp_extended, first, last),
+                            equity=extend.with.na(pl_wig, first, last),
+                            gold=extend.with.na(pl_gold, first, last),
+                            btc=extend.with.na(pl_btc, first, last),
+                            cpi=extend.with.na(pl_cpi_mom, first, last))
+
