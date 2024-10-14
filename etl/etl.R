@@ -98,8 +98,6 @@ read.stooq.rate <- function(file) {
   return(periods)
 }
 
-
-
 read.oecd.yield <- function(file, term="long") {
   #' Read bond yields from .csv file downloaded from data-explorer.oecd.org.
   #'
@@ -176,6 +174,28 @@ returns.from.prices <- function(prices) {
   returns <- present/previous - 1
   # Name vector elements as period end dates (return after some period measured at this date).
   names(returns) <- dates[-1]
+
+  return(returns)
+}
+
+rolling.returns.from.prices <- function(prices, time_frame=12) {
+  #' Obtain rolling returns from prices.
+  #'
+  #' @param prices numeric. A numeric vector of an asset's prices.
+  #' @param time_frame numeric. How long is a timeframe?
+  #'    Default 12 (annually if prices are given in months).
+  #' @return numeric. A numeric vector of an asset's total returns.
+
+  n <- length(prices)
+  # Get starting price of each time frame.
+  # The last frame starts at n-time_frame+1. Since we don't want to exclude it +1 => +2
+  start <- prices[-((n-time_frame+2):n)]
+  # Get ending price of each time frame. The first frame ends after a full period.
+  # Since we don't want to exlude it, we stop at the previous => -1
+  end <- prices[-(1:(time_frame-1))]
+  # TODO there is some date missmatch, needs probably +1 or something.
+  returns <- end/start - 1
+  names(returns) <- names(end)
 
   return(returns)
 }

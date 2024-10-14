@@ -107,4 +107,3 @@ pl_mo_returns <- data.frame(money_market=extend.with.na(pl_3mo_returns, first, l
                             gold=extend.with.na(pl_gold, first, last),
                             btc=extend.with.na(pl_btc, first, last),
                             cpi=extend.with.na(pl_cpi_mom, first, last))
-
