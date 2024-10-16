@@ -188,12 +188,10 @@ rolling.returns.from.prices <- function(prices, time_frame=12) {
 
   n <- length(prices)
   # Get starting price of each time frame.
-  # The last frame starts at n-time_frame+1. Since we don't want to exclude it +1 => +2
-  start <- prices[-((n-time_frame+2):n)]
+  # The last frame starts at n-time_frame+1.
+  start <- prices[-((n-time_frame+1):n)]
   # Get ending price of each time frame. The first frame ends after a full period.
-  # Since we don't want to exlude it, we stop at the previous => -1
-  end <- prices[-(1:(time_frame-1))]
-  # TODO there is some date missmatch, needs probably +1 or something.
+  end <- prices[-(1:time_frame)]
   returns <- end/start - 1
   names(returns) <- names(end)
 
