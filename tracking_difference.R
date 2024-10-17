@@ -1,35 +1,61 @@
 # Source etl script
 source("etl/etl.R")
-
 # Paths
 common <- "data/input/poland"
-common_bonds <- file.path(common, "bonds")
 common_equities <- file.path(common, "equities")
 
 # Rolling returns of indices.
-pl_wig20tr <- read.stooq.asset.price(file.path(common_equities, "wig20tr_m.csv"))
-pl_wig20tr <- select.returns(pl_wig20tr,"2019-12-31", "2024-09-30")
-pl_roll_wig20tr <- rolling.returns.from.prices(pl_wig20tr)
-pl_mwig40tr <- read.stooq.asset.price(file.path(common_equities, "mwig40tr_m.csv"))
-pl_roll_mwig40tr <- rolling.returns.from.prices(pl_mwig40tr)
-pl_swig80tr <- read.stooq.asset.price(file.path(common_equities, "swig80tr_m.csv"))
-pl_roll_swig80tr <- rolling.returns.from.prices(pl_swig80tr)
-pl_tbsp <- read.stooq.asset.price(file.path(common_bonds, "tbsp_m.csv"))
-pl_roll_tbsp <- rolling.returns.from.prices(pl_tbsp)
+pl_wig20tr <- read.stooq.asset.price(file.path(common_equities, "wig20tr_d.csv"))
 
 # Rolling returns of ETFs
-etf_wig20tr <- read.stooq.asset.price(file.path(common_equities, "etfbw20tr_pl_m.csv"))
-etf_wig20tr <- select.returns(etf_wig20tr,"2019-12-31", "2024-09-30")
-roll_etf_wig20tr <- rolling.returns.from.prices(etf_wig20tr)
-# TODO prepare proper dates.
-etf_mwig40tr <- read.stooq.asset.price(file.path(common_equities, "etfbm40tr_pl_m.csv"))
-roll_etf_mwig40tr <- rolling.returns.from.prices(etf_wig20tr)
-etf_swig80tr <- read.stooq.asset.price(file.path(common_equities, "etfbs80tr_pl_m.csv"))
-roll_etf_swig80tr <- rolling.returns.from.prices(etf_wig20tr)
-etf_tbsp <- read.stooq.asset.price(file.path(common_bonds, "etfbtbsp_pl_m.csv"))
-roll_etf_tbsp <- rolling.returns.from.prices(etf_tbsp)
+etf_wig20tr <- read.stooq.asset.price(file.path(common_equities, "etfbw20tr_pl_d.csv"))
 
-# Tracking differences.
-tracking_diff_wig20tr <- pl_roll_wig20tr - roll_etf_wig20tr
-summary(tracking_diff_wig20tr)
-plot(as.Date(names(tracking_diff_wig20tr)), tracking_diff_wig20tr, type="l", ylim = c(0, 0.02))
+rolling.tracking.diff <- function(index, etf, timeframe=12) {
+  #' Obtain rolling tracking difference for an etf.
+  #'
+  #' @param index numeric. A vector of index prices.
+  #' @param etf numeric. A vector of etf prices.
+  #' @param timeframe numeric. How long is a timeframe to roll?
+  #'    Default 12 (annually if prices are given in months).
+  #' @return numeric. A vector of rolling tracking differences.
+
+  # Get period over which to measure TD.
+  start <- names(etf)[1]
+  end <- names(etf)[length(etf)]
+  index <- select.returns(index, start, end)
+  # Get rolling returns.
+  index <- rolling.returns.from.prices(index, timeframe)
+  etf <- rolling.returns.from.prices(etf, timeframe)
+
+  return(index - etf)
+}
+
+plot.rolling.tracking.diff <- function(index, etf, timeframe = 12, etf.name="") {
+  #' Plot rolling tracking difference.
+  #'
+  #' @param index numeric. A vector of index prices.
+  #' @param etf numeric. A vector of etf prices.
+  #' @param timeframe numeric. How long is a timeframe to roll?
+  #'    Default 12 (annually if prices are given in months).
+  #' @param etf.name string. An ETF name to be added in chart title.
+  #' @return numeric. A vector of rolling tracking differences.
+
+  td <- rolling.tracking.diff(index, etf, timeframe)
+  # Prepare y-axis.
+  td.qt<- quantile(td, c(.0, 1))
+  y.axis <- seq(round(td.qt[1], 2), round(td.qt[2], 2), by=0.005)
+  # Plot
+  plot(as.Date(names(td)), td, type="l", yaxt = "n", ylim = td.qt,
+       main = paste(etf.name, "rolling tracking difference"),
+       xlab = "Date", ylab = "tracking difference")
+  axis(2, at=y.axis, labels=paste0(y.axis*100, "%"))
+  # Add horizontal lines
+  abline(h=td.qt, lty="dashed")
+  abline(h=mean(td), lty="dotted", col="red")
+
+  return(td)
+}
+td <- plot.rolling.tracking.diff(pl_wig20tr, etf_wig20tr, timeframe =250, "Beta WIG20TR")
+summary(td)
+td.qt <- quantile(td, c(.05, .95))
+hist(td[td>=td.qt[1] & td<=td.qt[2]], breaks=20)

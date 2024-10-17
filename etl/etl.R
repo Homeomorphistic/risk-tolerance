@@ -178,20 +178,19 @@ returns.from.prices <- function(prices) {
   return(returns)
 }
 
-rolling.returns.from.prices <- function(prices, time_frame=12) {
+rolling.returns.from.prices <- function(prices, timeframe=12) {
   #' Obtain rolling returns from prices.
   #'
   #' @param prices numeric. A numeric vector of an asset's prices.
-  #' @param time_frame numeric. How long is a timeframe?
+  #' @param timeframe numeric. How long is a timeframe?
   #'    Default 12 (annually if prices are given in months).
   #' @return numeric. A numeric vector of an asset's total returns.
 
   n <- length(prices)
-  # Get starting price of each time frame.
-  # The last frame starts at n-time_frame+1.
-  start <- prices[-((n-time_frame+1):n)]
+  # Get starting price of each time frame. The last frame starts at n-time_frame+1.
+  start <- prices[-((n-timeframe+1):n)]
   # Get ending price of each time frame. The first frame ends after a full period.
-  end <- prices[-(1:time_frame)]
+  end <- prices[-(1:timeframe)]
   returns <- end/start - 1
   names(returns) <- names(end)
 
