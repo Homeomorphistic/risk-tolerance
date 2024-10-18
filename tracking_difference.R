@@ -3,12 +3,21 @@ source("etl/etl.R")
 # Paths
 common <- "data/input/poland"
 common_equities <- file.path(common, "equities")
+common_bonds <- file.path(common, "bonds")
 
-# Rolling returns of indices.
-pl_wig20tr <- read.stooq.asset.price(file.path(common_equities, "wig20tr_d.csv"))
+# Indices
+wig20tr <- read.stooq.asset.price(file.path(common_equities, "wig20tr_w.csv"))
+mwig40tr <- read.stooq.asset.price(file.path(common_equities, "mwig40tr_m.csv"))
+swig80tr <- read.stooq.asset.price(file.path(common_equities, "swig80tr_m.csv"))
+tbsp <- read.stooq.asset.price(file.path(common_bonds, "^tbsp_m.csv"))
+gpwbw_bwz <- read.stooq.asset.price(file.path(common_bonds, "^gpwbbwz_m.csv"))
 
-# Rolling returns of ETFs
-etf_wig20tr <- read.stooq.asset.price(file.path(common_equities, "etfbw20tr_pl_d.csv"))
+# ETFs
+etf_wig20tr <- read.stooq.asset.price(file.path(common_equities, "etfbw20tr_pl_w.csv"))
+etf_mwig40tr <- read.stooq.asset.price(file.path(common_equities, "etfbm40tr_pl_m.csv"))
+etf_swig80tr <- read.stooq.asset.price(file.path(common_equities, "etfbs80tr_pl_m.csv"))
+etf_tbsp <- read.stooq.asset.price(file.path(common_bonds, "etfbtbsp_pl_m.csv"))
+etf_cash <- read.stooq.asset.price(file.path(common_bonds, "etfbcash_pl_m.csv"))
 
 rolling.tracking.diff <- function(index, etf, timeframe=12) {
   #' Obtain rolling tracking difference for an etf.
@@ -42,20 +51,22 @@ plot.rolling.tracking.diff <- function(index, etf, timeframe = 12, etf.name="") 
 
   td <- rolling.tracking.diff(index, etf, timeframe)
   # Prepare y-axis.
-  td.qt<- quantile(td, c(.0, 1))
+  td.qt<- quantile(td, c(.05, .95))
   y.axis <- seq(round(td.qt[1], 2), round(td.qt[2], 2), by=0.005)
   # Plot
-  plot(as.Date(names(td)), td, type="l", yaxt = "n", ylim = td.qt,
+  plot(as.Date(names(td)), td, type="S", yaxt = "n", lwd=0.5, #ylim = td.qt,
        main = paste(etf.name, "rolling tracking difference"),
        xlab = "Date", ylab = "tracking difference")
   axis(2, at=y.axis, labels=paste0(y.axis*100, "%"))
   # Add horizontal lines
-  abline(h=td.qt, lty="dashed")
-  abline(h=mean(td), lty="dotted", col="red")
+  abline(h=td.qt, lty="dotted", lwd=2, col="green")
+  abline(h=mean(td), lty="dotted", col="red", lwd=2)
+  abline(h=0, col="blue", lwd=2)
 
   return(td)
 }
-td <- plot.rolling.tracking.diff(pl_wig20tr, etf_wig20tr, timeframe =250, "Beta WIG20TR")
+
+td <- plot.rolling.tracking.diff(wig20tr, etf_wig20tr, timeframe=51, "Beta WIG20TR")
 summary(td)
 td.qt <- quantile(td, c(.05, .95))
 hist(td[td>=td.qt[1] & td<=td.qt[2]], breaks=20)
